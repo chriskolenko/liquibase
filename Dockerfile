@@ -21,17 +21,16 @@ RUN apt-get update && apt-get install -y \
 
 RUN curl -L https://github.com/liquibase/liquibase/releases/download/v${LIQUIBASE_VERSION}/liquibase-${LIQUIBASE_VERSION}.tar.gz -o liquibase-core-${LIQUIBASE_VERSION}-bin.tar.gz \
   && tar -xzf liquibase-core-${LIQUIBASE_VERSION}-bin.tar.gz \
-  && rm liquibase-core-${LIQUIBASE_VERSION}-bin.tar.gz
+  && rm liquibase-core-${LIQUIBASE_VERSION}-bin.tar.gz \
+  && chmod +x liquibase \
+  && ln -s /liquibase/liquibase /usr/local/bin/liquibase
 
 RUN curl -L https://jdbc.postgresql.org/download/postgresql-${POSTGRES_DRIVER_VERSION}.jar -o postgres-jdbc.jar
-
 
 RUN curl -L https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${MYSQL_DRIVER_VERSION}.tar.gz -o mysql-connector-java.tar.gz
 RUN tar xf mysql-connector-java.tar.gz && \
   mv mysql-connector-java-${MYSQL_DRIVER_VERSION}/mysql-connector-java-${MYSQL_DRIVER_VERSION}.jar mysql-jdbc.jar && \
   rm -rf mysql-connector-java.tar.gz mysql-connector-java-${MYSQL_DRIVER_VERSION}
-
-RUN chmod 777 /liquibase
 
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 CMD ["/bin/sh", "-i"]
